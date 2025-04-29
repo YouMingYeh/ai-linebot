@@ -2,6 +2,8 @@
 
 **AI LINE Bot** is a modern TypeScript application implementing a LINE chatbot with AI capabilities. Built with Express, PostgreSQL, and the LINE Messaging API SDK, it intelligently processes and responds to user messages by integrating advanced AI models via [AI SDK](https://sdk.vercel.ai/)'s `@ai-sdk/google` and `@ai-sdk/openai`.
 
+*Read this in other languages: [繁體中文](README.zh-TW.md)*
+
 ---
 
 ## For the Impatient (5-Minute Setup)
@@ -13,23 +15,23 @@ Want to get started quickly? Follow these steps:
    ```bash
    git clone https://github.com/YOUR_USERNAME/ai-linebot.git
    cd ai-linebot
-   pnpm install
    ```
 
 2. **Configure your environment:**
 
    ```bash
+   pnpm install
    pnpm run init:env
    ```
 
    Enter your LINE credentials and AI provider details when prompted.
 
-3. **Deploy with Docker Compose:**
+3. **(In cloud) Deploy with Docker Compose:**
    ```bash
    docker compose up -d --build
    ```
 
-That's it! The application will be running with both the bot and a PostgreSQL database configured automatically. No need for separate database setup.
+That's it! The application will be running with both the AI bot and a PostgreSQL database configured automatically. No need for separate database setup.
 
 > **IMPORTANT:** To use this bot with LINE, you must deploy it to a server with a valid HTTPS endpoint. LINE's Messaging API requires secure webhook URLs.
 
@@ -57,6 +59,8 @@ That's it! The application will be running with both the bot and a PostgreSQL da
     - [Manual Docker deployment](#manual-docker-deployment)
   - [Available Scripts](#available-scripts)
   - [Project Structure](#project-structure)
+  - [Security Best Practices](#security-best-practices)
+  - [Database Management](#database-management)
   - [Demo](#demo)
   - [Support and Contact](#support-and-contact)
   - [License](#license)
@@ -66,12 +70,12 @@ That's it! The application will be running with both the bot and a PostgreSQL da
 ## Features
 
 - **LINE Messaging API Integration**: Handles various message types (text, image, audio, video, files, stickers).
-- **Dual AI Provider Support**: Choose between Google Generative AI (Gemini) or OpenAI (GPT).
+- **Multiple AI Model Support**: Currently includes Google Generative AI (Gemini) or OpenAI (GPT). You can develop integrations for other models supported by [AI SDK](https://sdk.vercel.ai/).
+> ⚠️ **Note**: OpenAI models currently only support image and text message types.
 - **Database Integration**: Stores conversation history and user data in PostgreSQL using Prisma ORM.
 - **Docker Support**: Easy deployment with Docker and Docker Compose.
 - **TypeScript**: Fully typed codebase using modern ES modules.
 - **Interactive Setup**: User-friendly script for environment configuration.
-- **Development Tools**: Hot reloading with `tsx` for an efficient workflow.
 
 ---
 
@@ -80,10 +84,12 @@ That's it! The application will be running with both the bot and a PostgreSQL da
 - Node.js v18 or later
 - pnpm v9.15.4 or later (recommended) or npm
 - PostgreSQL database
-- LINE developer account with a Messaging API channel
+- LINE developer account, official account, and Messaging API
 - Google Generative AI API key (if using Google AI)
 - OpenAI API key (if using OpenAI)
-- **A server with a public HTTPS endpoint** (required for LINE webhook)
+- **A server with an HTTPS endpoint** (required for LINE webhook)
+
+> Need help? Contact me: ym911216@gmail.com
 
 ---
 
@@ -96,13 +102,14 @@ For your LINE bot to work properly, you **must** deploy it on a server with:
 
 Options include:
 
-- Cloud providers like AWS, GCP, Azure, Heroku, Render, or Railway
+- Cloud service providers like AWS, GCP, Azure, Heroku, Render, or Railway
 - Your own server with proper SSL termination
-- Tunnel services like ngrok (for development only)
+
+> I personally use a DigitalOcean VPS server with Cloudflare SSL.
 
 After deployment, configure your webhook URL in the LINE Developer Console to point to your `/callback` endpoint.
 
-If you need assistance with deployment or have any questions, please contact: ym911216@gmail.com
+> If you need assistance with deployment or have any questions, please contact: ym911216@gmail.com
 
 ---
 
@@ -136,8 +143,10 @@ npm install
    This script guides you through configuring:
 
    - LINE bot credentials
-   - AI provider selection and API keys
-   - Database connection details
+   - AI model provider selection and API keys
+   - Database configuration
+   
+> You can skip some options that are already configured, or copy `.env.example` to `.env` and edit it manually.
 
 2. **Verify your configuration**: The setup script creates a `.env` file. Example settings:
 
@@ -180,7 +189,7 @@ npm install
 
 ### Development mode
 
-Start with hot reloading:
+Use:
 
 ```bash
 pnpm dev
@@ -197,8 +206,8 @@ pnpm start
 
 ### Endpoints
 
-- `GET /` - Simple health check
-- `GET /health` - Health check
+- `GET /` - Check if server is running properly
+- `GET /health` - Check server health status
 - `POST /callback` - LINE webhook endpoint (configure in LINE Developer Console)
 
 ---
@@ -211,7 +220,7 @@ pnpm start
 
 2. You can either:
 
-   - Update your `.env` file with the correct database URL for Docker Compose: `postgresql://linebot:password@postgres:5432/linebot`, or
+   - Update your `.env` file with the correct database URL for Docker Compose, or
    - Let the `init:env` script configure everything for you with Docker Compose deployment in mind
 
 3. Run:
@@ -220,18 +229,20 @@ pnpm start
    docker compose up -d --build
    ```
 
-   This will set up both the application and a PostgreSQL database container, with all necessary configuration.
+   This will set up both the application and a PostgreSQL database container, and configure all necessary components.
 
 ### Manual Docker deployment
 
 ```bash
 # Build the image
 docker build -t ai-linebot .
-Run the containerdocker run -d
---env-file .env
--p 1234:1234
---name ai-linebot-container
-ai-linebot
+
+# Run the container
+docker run -d \
+  --env-file .env \
+  -p 1234:1234 \
+  --name ai-linebot-container \
+  ai-linebot
 ```
 
 ---
@@ -262,30 +273,26 @@ ai-linebot
 ## Project Structure
 
 ```
-
+├── client/                # External client wrappers (LINE API, Prisma)
+├── event-handler/         # Webhook event handling logic
+│   ├── index.ts           # Main event dispatcher
+│   └── user-event-handler/# User event handlers
+│       └── message-event-handler/ # Message event handlers
+├── lib/                   # Shared libraries and utilities
+│   ├── types.ts           # TypeScript type definitions
+│   ├── utils.ts           # General utility functions
+│   ├── messaging-api/     # Messaging API specific utilities
+│   └── repository/        # Database access layer
+├── prisma/                # Prisma ORM configuration and schema
+│   └── schema.prisma      # Database schema definition
+├── scripts/               # Utility scripts (setup, tests)
+├── index.ts               # Application entry point
+├── .env.example           # Example environment variables file
+├── docker-compose.yml     # Docker Compose configuration
+├── Dockerfile             # Docker container definition
+├── environment.d.ts       # Environment variable type declarations
+└── tsconfig.json          # TypeScript configuration
 ```
-
-├── client/ # External client wrappers (LINE API, Prisma)
-├── event-handler/ # Webhook event handling logic
-│ ├── index.ts # Main event dispatcher
-│ └── user-event-handler/ # Handlers for user events
-│ └── message-event-handler/ # Handlers for message events
-├── lib/ # Shared libraries and utilities
-│ ├── types.ts # TypeScript type definitions
-│ ├── utils.ts # General utility functions
-│ ├── messaging-api/ # Messaging API specific utilities
-│ └── repository/ # Database access layer
-├── prisma/ # Prisma ORM configuration and schema
-│ └── schema.prisma # Database schema definition
-├── scripts/ # Utility scripts (setup, tests)
-├── index.ts # Application entry point
-├── .env.example # Example environment variables file
-├── docker-compose.yml # Docker Compose configuration
-├── Dockerfile # Docker container definition
-├── environment.d.ts # Environment variable type declarations
-└── tsconfig.json # TypeScript configuration
-
-````
 
 ---
 
@@ -294,7 +301,7 @@ ai-linebot
 For production deployments:
 
 - **Add** `.env` **to** `.gitignore` to prevent committing secrets.
-- Consider using a secrets manager (e.g., AWS Secrets Manager, HashiCorp Vault).
+- Consider using a key manager (e.g., AWS Secrets Manager, HashiCorp Vault).
 - Use Docker secrets for containerized deployments.
 - Set environment variables directly on the production host or container platform.
 
@@ -312,7 +319,7 @@ To view and manage your data visually:
 
 ```bash
 pnpm prisma:studio
-````
+```
 
 ---
 
