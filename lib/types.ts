@@ -22,7 +22,7 @@ export interface UserInsert {
   onboarded?: boolean;
 }
 
-export type UserUpdate = Partial<Omit<UserInsert, 'id'>>;
+export type UserUpdate = Partial<Omit<UserInsert, "id">>;
 
 export interface Message {
   id: string;

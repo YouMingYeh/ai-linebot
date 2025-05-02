@@ -1,0 +1,16 @@
+{
+  "semi": true,
+  "singleQuote": false,
+  "tabWidth": 2,
+  "trailingComma": "es5",
+  "printWidth": 100,
+  "plugins": ["@ianvs/prettier-plugin-sort-imports", "prettier-plugin-tailwindcss"],
+  "importOrder": [
+    "^(express|@line/bot-sdk)$",
+    "<THIRD_PARTY_MODULES>",
+    "^@/client/(.*)$",
+    "^@/lib/(.*)$",
+    "^@/event-handler/(.*)$",
+    "^[./]"
+  ]
+}

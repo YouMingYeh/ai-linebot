@@ -59,10 +59,10 @@ export const generateUuid = (): string => {
  */
 export async function convertContentToBase64(content: Blob | Buffer): Promise<string> {
   if (Buffer.isBuffer(content)) {
-    return content.toString('base64');
+    return content.toString("base64");
   } else if (content instanceof Blob) {
     const arrayBuffer = await content.arrayBuffer();
-    return Buffer.from(arrayBuffer).toString('base64');
+    return Buffer.from(arrayBuffer).toString("base64");
   }
   throw new Error("Unsupported content type for base64 conversion.");
 }

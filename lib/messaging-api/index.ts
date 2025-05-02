@@ -5,19 +5,19 @@ class LINEAPIClient {
   private blobClient: messagingApi.MessagingApiBlobClient;
   constructor(
     client: messagingApi.MessagingApiClient,
-    blobClient: messagingApi.MessagingApiBlobClient,
+    blobClient: messagingApi.MessagingApiBlobClient
   ) {
     this.client = client;
     this.blobClient = blobClient;
   }
   async replyMessagesWithRequest(
-    replyMessageRequest: messagingApi.ReplyMessageRequest,
+    replyMessageRequest: messagingApi.ReplyMessageRequest
   ): Promise<messagingApi.ReplyMessageResponse> {
     return this.client.replyMessage(replyMessageRequest);
   }
   async replyMessages(
     replyToken: string,
-    messages: messagingApi.Message[],
+    messages: messagingApi.Message[]
   ): Promise<messagingApi.ReplyMessageResponse> {
     return this.client.replyMessage({
       replyToken,
@@ -26,7 +26,7 @@ class LINEAPIClient {
   }
   async replySingleMessage(
     replyToken: string,
-    message: messagingApi.Message,
+    message: messagingApi.Message
   ): Promise<messagingApi.ReplyMessageResponse> {
     return this.client.replyMessage({
       replyToken,
@@ -36,7 +36,7 @@ class LINEAPIClient {
 
   async replyTextMessage(
     replyToken: string,
-    text: string,
+    text: string
   ): Promise<messagingApi.ReplyMessageResponse> {
     return this.client.replyMessage({
       replyToken,
@@ -50,7 +50,7 @@ class LINEAPIClient {
   }
   async replyImageMessage(
     replyToken: string,
-    image: messagingApi.ImageMessage,
+    image: messagingApi.ImageMessage
   ): Promise<messagingApi.ReplyMessageResponse> {
     return this.client.replyMessage({
       replyToken,
@@ -59,7 +59,7 @@ class LINEAPIClient {
   }
   async replyVideoMessage(
     replyToken: string,
-    video: messagingApi.VideoMessage,
+    video: messagingApi.VideoMessage
   ): Promise<messagingApi.ReplyMessageResponse> {
     return this.client.replyMessage({
       replyToken,
@@ -68,7 +68,7 @@ class LINEAPIClient {
   }
   async replyStickerMessage(
     replyToken: string,
-    sticker: messagingApi.StickerMessage,
+    sticker: messagingApi.StickerMessage
   ): Promise<messagingApi.ReplyMessageResponse> {
     return this.client.replyMessage({
       replyToken,
@@ -76,9 +76,7 @@ class LINEAPIClient {
     });
   }
 
-  async getUserProfile(
-    userId: string,
-  ): Promise<messagingApi.UserProfileResponse> {
+  async getUserProfile(userId: string): Promise<messagingApi.UserProfileResponse> {
     const profile = await this.client.getProfile(userId);
     return profile;
   }
@@ -89,8 +87,7 @@ class LINEAPIClient {
    * @returns File
    */
   async getMessageFile(messageId: string): Promise<File> {
-    const { httpResponse, body } =
-      await this.blobClient.getMessageContentWithHttpInfo(messageId);
+    const { httpResponse, body } = await this.blobClient.getMessageContentWithHttpInfo(messageId);
     let contentStream;
     if (httpResponse.status === 200) {
       contentStream = body;
@@ -98,8 +95,7 @@ class LINEAPIClient {
     if (!contentStream) {
       throw new Error("Failed to get the content stream");
     }
-    const contentType =
-      httpResponse.headers.get("content-type") || "application/octet-stream";
+    const contentType = httpResponse.headers.get("content-type") || "application/octet-stream";
 
     // get the mime type of the content stream
     const chunks: Buffer[] = [];
@@ -133,7 +129,7 @@ class LINEAPIClient {
    */
   async sendMessages(
     messages: messagingApi.Message[],
-    to: string,
+    to: string
   ): Promise<messagingApi.SentMessage[]> {
     const response = await this.client.pushMessage({
       to,

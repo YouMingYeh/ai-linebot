@@ -1,16 +1,16 @@
+import { webhook } from "@line/bot-sdk";
+import { CoreMessage } from "ai";
 import { LINEAPIClient } from "@/lib/messaging-api/index.js";
 import { Repository } from "@/lib/repository/index.js";
 import { User } from "@/lib/types.js";
-import { webhook } from "@line/bot-sdk";
-import { generateAiReply, processAiResponse } from "./utils.js";
 import { convertContentToBase64 } from "@/lib/utils.js"; // Import from the correct location
-import { CoreMessage } from "ai";
+import { generateAiReply, processAiResponse } from "./utils.js";
 
 const audioEventHandler = async (
   event: webhook.MessageEvent,
   user: User,
   clientApi: LINEAPIClient,
-  repo: Repository,
+  repo: Repository
 ): Promise<void> => {
   if (event.message.type !== "audio" || !event.replyToken) return;
   const audioMsg = event.message as webhook.AudioMessageContent;
@@ -24,18 +24,18 @@ const audioEventHandler = async (
       content: [
         { type: "text", text: `[Audio]` },
         { type: "file", data: base64Data, mimeType: content.type },
-      ]
+      ],
     });
     // Check if message creation was successful
     if (createResult.error || !createResult.data) {
-        console.error("Failed to create message:", createResult.error);
-        throw new Error("Failed to save user message.");
+      console.error("Failed to create message:", createResult.error);
+      throw new Error("Failed to save user message.");
     }
 
     const messagesResult = await repo.getMessagesByUserId(user.id);
     if (messagesResult.error) {
-        console.error("Failed to get messages:", messagesResult.error);
-        throw new Error("Failed to retrieve message history.");
+      console.error("Failed to get messages:", messagesResult.error);
+      throw new Error("Failed to retrieve message history.");
     }
 
     const aiReply = await generateAiReply(
@@ -44,14 +44,14 @@ const audioEventHandler = async (
         id,
         role,
         content,
-      })) as CoreMessage[],
+      })) as CoreMessage[]
     );
     await processAiResponse(clientApi, repo, user, event.replyToken, aiReply);
   } catch (err) {
     console.error("audioEventHandler:", err);
     await clientApi.replyTextMessage(
       event.replyToken,
-      "抱歉，我在處理您的音訊時遇到了問題。請稍後再試。",
+      "抱歉，我在處理您的音訊時遇到了問題。請稍後再試。"
     );
   }
 };

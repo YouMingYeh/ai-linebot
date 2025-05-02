@@ -1,11 +1,11 @@
-import { LINEAPIClient } from "@/lib/messaging-api/index.js";
-import { removeMarkdown, generateUuid } from "@/lib/utils.js"; // Updated import
 import { messagingApi } from "@line/bot-sdk";
-import { CoreMessage, generateText } from "ai";
 import { google } from "@ai-sdk/google";
 import { openai } from "@ai-sdk/openai";
+import { CoreMessage, generateText } from "ai";
+import { LINEAPIClient } from "@/lib/messaging-api/index.js";
 import { Repository } from "@/lib/repository/index.js";
 import { User } from "@/lib/types.js";
+import { generateUuid, removeMarkdown } from "@/lib/utils.js"; // Updated import
 
 // AI model configuration
 const DEFAULT_AI_PROVIDER = process.env.DEFAULT_AI_PROVIDER || "google";
@@ -23,7 +23,7 @@ export async function processAiResponse(
   user: User,
   replyToken: string,
   aiResponse: string,
-  quoteToken?: string,
+  quoteToken?: string
 ): Promise<void> {
   const reply = aiResponse.trim();
   if (!reply) return;
@@ -56,35 +56,32 @@ export function getUserAIProvider(userId: string): string {
  * Sets the AI provider preference for a user
  */
 export function setUserAIProvider(userId: string, provider: string): boolean {
-  if (provider !== 'google' && provider !== 'openai') {
+  if (provider !== "google" && provider !== "openai") {
     return false;
   }
-  
+
   // Validate that the necessary API keys are available
-  if (provider === 'google' && !GOOGLE_GENERATIVE_AI_API_KEY) {
+  if (provider === "google" && !GOOGLE_GENERATIVE_AI_API_KEY) {
     return false;
   }
-  if (provider === 'openai' && !OPENAI_API_KEY) {
+  if (provider === "openai" && !OPENAI_API_KEY) {
     return false;
   }
-  
+
   userAIProviderPreference[userId] = provider;
   return true;
 }
 
-export async function generateAiReply(
-  user: User,
-  msgs: CoreMessage[],
-): Promise<string> {
+export async function generateAiReply(user: User, msgs: CoreMessage[]): Promise<string> {
   try {
     const provider = getUserAIProvider(user.id);
-    
-    if (provider === 'openai') {
+
+    if (provider === "openai") {
       // OpenAI model
       if (!OPENAI_API_KEY) {
         return "OpenAI API key not configured. Please contact the administrator.";
       }
-      
+
       const r = await generateText({
         model: openai(OPENAI_MODEL),
         messages: msgs,
@@ -96,7 +93,7 @@ export async function generateAiReply(
       if (!GOOGLE_GENERATIVE_AI_API_KEY) {
         return "Google API key not configured. Please contact the administrator.";
       }
-      
+
       const r = await generateText({
         model: google(GOOGLE_AI_MODEL),
         messages: msgs,

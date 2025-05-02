@@ -1,0 +1,22 @@
+# Build outputs
+dist
+node_modules
+.next
+
+# Generated files
+.prisma
+.env
+.env.*
+!.env.example
+
+# Cache
+.pnpm-store
+.cache
+
+# Logs
+*.log
+
+# Lock files
+pnpm-lock.yaml
+package-lock.json
+yarn.lock

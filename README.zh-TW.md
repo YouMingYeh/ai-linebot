@@ -69,7 +69,7 @@
 
 - **LINE Messaging API 整合**：處理各種訊息類型（文字、圖片、音訊、影片、文件、貼圖）。
 - **支援多 AI 模型**：目前包含 Google Generative AI (Gemini) 或 OpenAI (GPT)。你可以自行開發 [AI SDK](https://sdk.vercel.ai/) 提供的其他模型。
-> ⚠️ **注意**：OpenAI 的模型目前僅支援圖像與文字訊息類型。
+  > ⚠️ **注意**：OpenAI 的模型目前僅支援圖像與文字訊息類型。
 - **資料庫整合**：使用 Prisma ORM 將對話歷史和用戶數據儲存在 PostgreSQL 中。
 - **Docker 支持**：使用 Docker 和 Docker Compose 輕鬆部署。
 - **TypeScript**：使用現代 ES 模塊的完全類型化程式碼。
@@ -143,7 +143,7 @@ npm install
    - LINE 機器人憑證
    - AI 模型提供商選擇和 API Key
    - 資料庫
-> 你可以跳過一些已經設定好的選項，或自行複製 `.env.example` 至 `.env` 並手動編輯。
+     > 你可以跳過一些已經設定好的選項，或自行複製 `.env.example` 至 `.env` 並手動編輯。
 
 2. **驗證您的設定**：設定腳本將創建一個 `.env` 文件。示例設定：
 
@@ -246,24 +246,24 @@ docker run -d \
 
 ## 可用腳本 (Available Scripts)
 
-| 命令                       | 說明                             |
-| -------------------------- | -------------------------------- |
-| `pnpm clean`               | 移除 dist 目錄                   |
-| `pnpm build`               | 將 TypeScript 編譯為 JavaScript  |
-| `pnpm start`               | 運行已編譯的應用程式             |
-| `pnpm dev`                 | 使用熱重載啟動開發服務器         |
-| `pnpm init:env`            | 運行互動式環境設定               |
-| `pnpm test`                | 運行 Jest 測試                   |
-| `pnpm test:db`             | 測試資料庫連接                   |
-| `pnpm test:prisma`         | 測試 Prisma 連接並列印數據計數   |
-| `pnpm prisma:generate`     | 生成 Prisma 客戶端               |
-| `pnpm prisma:migrate`      | 創建並應用新的遷移               |
-| `pnpm prisma:migrate:deploy`| 在生產中部署遷移                |
-| `pnpm prisma:studio`       | 打開 Prisma Studio 管理資料庫    |
-| `pnpm prisma:push`         | 將 Prisma 架構推送到資料庫       |
-| `pnpm db:sync`             | 同步資料庫架構（僅開發）         |
-| `pnpm lint`                | 運行 ESLint                      |
-| `pnpm format`              | 使用 Prettier 格式化代碼         |
+| 命令                         | 說明                            |
+| ---------------------------- | ------------------------------- |
+| `pnpm clean`                 | 移除 dist 目錄                  |
+| `pnpm build`                 | 將 TypeScript 編譯為 JavaScript |
+| `pnpm start`                 | 運行已編譯的應用程式            |
+| `pnpm dev`                   | 使用熱重載啟動開發服務器        |
+| `pnpm init:env`              | 運行互動式環境設定              |
+| `pnpm test`                  | 運行 Jest 測試                  |
+| `pnpm test:db`               | 測試資料庫連接                  |
+| `pnpm test:prisma`           | 測試 Prisma 連接並列印數據計數  |
+| `pnpm prisma:generate`       | 生成 Prisma 客戶端              |
+| `pnpm prisma:migrate`        | 創建並應用新的遷移              |
+| `pnpm prisma:migrate:deploy` | 在生產中部署遷移                |
+| `pnpm prisma:studio`         | 打開 Prisma Studio 管理資料庫   |
+| `pnpm prisma:push`           | 將 Prisma 架構推送到資料庫      |
+| `pnpm db:sync`               | 同步資料庫架構（僅開發）        |
+| `pnpm lint`                  | 運行 ESLint                     |
+| `pnpm format`                | 使用 Prettier 格式化代碼        |
 
 ---
 

@@ -1,9 +1,9 @@
+import { webhook } from "@line/bot-sdk";
+import { CoreMessage } from "ai";
 import { LINEAPIClient } from "@/lib/messaging-api/index.js";
 import { Repository } from "@/lib/repository/index.js";
 import { User } from "@/lib/types.js";
-import { webhook } from "@line/bot-sdk";
 import { generateAiReply, processAiResponse } from "./utils.js";
-import { CoreMessage } from "ai";
 
 const textEventHandler = async (
   event: webhook.MessageEvent,
@@ -24,15 +24,15 @@ const textEventHandler = async (
     });
     // Check if message creation was successful
     if (createResult.error || !createResult.data) {
-        console.error("Failed to create message:", createResult.error);
-        throw new Error("Failed to save user message.");
+      console.error("Failed to create message:", createResult.error);
+      throw new Error("Failed to save user message.");
     }
 
     // Fetch messages and check for errors
     const messagesResult = await repo.getMessagesByUserId(user.id);
     if (messagesResult.error) {
-        console.error("Failed to get messages:", messagesResult.error);
-        throw new Error("Failed to retrieve message history.");
+      console.error("Failed to get messages:", messagesResult.error);
+      throw new Error("Failed to retrieve message history.");
     }
     // Use messagesResult.data which can be []
     const aiInput = (messagesResult.data ?? []).map(({ id, role, content }) => ({
@@ -47,10 +47,7 @@ const textEventHandler = async (
     await processAiResponse(clientApi, repo, user, event.replyToken, aiReply);
   } catch (e) {
     console.error("textEventHandler:", e);
-    await clientApi.replyTextMessage(
-      event.replyToken,
-      "抱歉，我遇到了一些問題。請稍後再試。"
-    );
+    await clientApi.replyTextMessage(event.replyToken, "抱歉，我遇到了一些問題。請稍後再試。");
   }
 };
 

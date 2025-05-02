@@ -1,7 +1,7 @@
-import { input, select, confirm } from "@inquirer/prompts";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { confirm, input, select } from "@inquirer/prompts";
 import chalk from "chalk";
 
 // ---------------------------------------------------------------------------
@@ -54,7 +54,8 @@ const translations = {
     goConsole:
       "Open the LINE Developers Console → select your provider → open the channel you just created → Messaging API tab.",
     askAccessToken: "Paste your *Channel Access Token* (long-lived)",
-    hintAccessToken: "(Issue one in the Messaging API tab in LINE Developer Console if you haven’t already)",
+    hintAccessToken:
+      "(Issue one in the Messaging API tab in LINE Developer Console if you haven’t already)",
     needAccess: "Access Token is required",
     askSecret: "Paste your *Channel Secret*",
     hintSecret: "(Find it in the Basic Settings tab in LINE Developer Console)",
@@ -71,8 +72,7 @@ const translations = {
 
     // Database --------------------------------------------------------------
     dockerQuestion: "Will you run PostgreSQL via Docker?",
-    usingDocker:
-      "Awesome – we’ll assume a Docker Compose postgres service at postgres:5432.",
+    usingDocker: "Awesome – we’ll assume a Docker Compose postgres service at postgres:5432.",
     localDb: "Enter details for your own PostgreSQL instance.",
     dbHost: "Database host",
     dbPort: "Database port",
@@ -116,7 +116,8 @@ const translations = {
     goConsole:
       "開啟 LINE 開發者主控台 → 選擇您的 Provider → 點入剛建立的 Channel → Messaging API 分頁。",
     askAccessToken: "貼上 *Channel Access Token*（long-lived）",
-    hintAccessToken: "（若尚未建立，請前往 LINE Developer Console 的 Messaging API 分頁並點擊 Issue）",
+    hintAccessToken:
+      "（若尚未建立，請前往 LINE Developer Console 的 Messaging API 分頁並點擊 Issue）",
     needAccess: "必須填寫 Access Token",
     askSecret: "貼上 *Channel Secret*",
     hintSecret: "（在 LINE Developer Console 的 Basic Settings 分頁）",
@@ -258,10 +259,8 @@ async function setupEnv(): Promise<void> {
       default: defaults.OPENAI_API_KEY ?? "",
       validate: (v: string) => (v.trim() ? true : chalk.red(t.needOpenAIKey)),
     });
-    answers.GOOGLE_AI_MODEL =
-      defaults.GOOGLE_AI_MODEL ?? "gemini-2.0-flash-001";
-    answers.GOOGLE_GENERATIVE_AI_API_KEY =
-      defaults.GOOGLE_GENERATIVE_AI_API_KEY ?? "";
+    answers.GOOGLE_AI_MODEL = defaults.GOOGLE_AI_MODEL ?? "gemini-2.0-flash-001";
+    answers.GOOGLE_GENERATIVE_AI_API_KEY = defaults.GOOGLE_GENERATIVE_AI_API_KEY ?? "";
   }
 
   // ── Step 3: Database ----------------------------------------------------
@@ -273,8 +272,7 @@ async function setupEnv(): Promise<void> {
 
   if (useDocker) {
     console.log(chalk.dim(t.usingDocker));
-    answers.DATABASE_URL =
-      "postgresql://linebot:password@postgres:5432/linebot";
+    answers.DATABASE_URL = "postgresql://linebot:password@postgres:5432/linebot";
   } else {
     console.log(chalk.dim(t.localDb));
     const host = await input({

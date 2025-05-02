@@ -2,7 +2,7 @@
 
 **AI LINE Bot** is a modern TypeScript application implementing a LINE chatbot with AI capabilities. Built with Express, PostgreSQL, and the LINE Messaging API SDK, it intelligently processes and responds to user messages by integrating advanced AI models via [AI SDK](https://sdk.vercel.ai/)'s `@ai-sdk/google` and `@ai-sdk/openai`.
 
-*Read this in other languages: [繁體中文](README.zh-TW.md)*
+_Read this in other languages: [繁體中文](README.zh-TW.md)_
 
 ---
 
@@ -39,7 +39,7 @@ That's it! The application will be running with both the AI bot and a PostgreSQL
 
 ## Table of Contents
 
-- [AI LINE Bot](#ai-line-bot)
+- [AI LINE Bot](#ai-linebot)
   - [For the Impatient (5-Minute Setup)](#for-the-impatient-5-minute-setup)
   - [Table of Contents](#table-of-contents)
   - [Features](#features)
@@ -71,7 +71,7 @@ That's it! The application will be running with both the AI bot and a PostgreSQL
 
 - **LINE Messaging API Integration**: Handles various message types (text, image, audio, video, files, stickers).
 - **Multiple AI Model Support**: Currently includes Google Generative AI (Gemini) or OpenAI (GPT). You can develop integrations for other models supported by [AI SDK](https://sdk.vercel.ai/).
-> ⚠️ **Note**: OpenAI models currently only support image and text message types.
+  > ⚠️ **Note**: OpenAI models currently only support image and text message types.
 - **Database Integration**: Stores conversation history and user data in PostgreSQL using Prisma ORM.
 - **Docker Support**: Easy deployment with Docker and Docker Compose.
 - **TypeScript**: Fully typed codebase using modern ES modules.
@@ -145,7 +145,7 @@ npm install
    - LINE bot credentials
    - AI model provider selection and API keys
    - Database configuration
-   
+
 > You can skip some options that are already configured, or copy `.env.example` to `.env` and edit it manually.
 
 2. **Verify your configuration**: The setup script creates a `.env` file. Example settings:
@@ -249,24 +249,24 @@ docker run -d \
 
 ## Available Scripts
 
-| Command                     | Description                                  |
-| --------------------------- | -------------------------------------------- |
-| `pnpm clean`                | Remove the dist directory                    |
-| `pnpm build`                | Compile TypeScript to JavaScript             |
-| `pnpm start`                | Run the compiled application                 |
-| `pnpm dev`                  | Start development server with hot reloading  |
-| `pnpm init:env`             | Run interactive environment setup            |
-| `pnpm test`                 | Run Jest tests                               |
-| `pnpm test:db`              | Test database connection                     |
-| `pnpm test:prisma`          | Test Prisma connection and print data counts |
-| `pnpm prisma:generate`      | Generate Prisma client                       |
-| `pnpm prisma:migrate`       | Create and apply a new migration             |
-| `pnpm prisma:migrate:deploy`| Deploy migrations in production              |
-| `pnpm prisma:studio`        | Open Prisma Studio to manage database        |
-| `pnpm prisma:push`          | Push Prisma schema to database               |
-| `pnpm db:sync`              | Sync database schema (dev only)              |
-| `pnpm lint`                 | Run ESLint                                   |
-| `pnpm format`               | Format code with Prettier                    |
+| Command                      | Description                                  |
+| ---------------------------- | -------------------------------------------- |
+| `pnpm clean`                 | Remove the dist directory                    |
+| `pnpm build`                 | Compile TypeScript to JavaScript             |
+| `pnpm start`                 | Run the compiled application                 |
+| `pnpm dev`                   | Start development server with hot reloading  |
+| `pnpm init:env`              | Run interactive environment setup            |
+| `pnpm test`                  | Run Jest tests                               |
+| `pnpm test:db`               | Test database connection                     |
+| `pnpm test:prisma`           | Test Prisma connection and print data counts |
+| `pnpm prisma:generate`       | Generate Prisma client                       |
+| `pnpm prisma:migrate`        | Create and apply a new migration             |
+| `pnpm prisma:migrate:deploy` | Deploy migrations in production              |
+| `pnpm prisma:studio`         | Open Prisma Studio to manage database        |
+| `pnpm prisma:push`           | Push Prisma schema to database               |
+| `pnpm db:sync`               | Sync database schema (dev only)              |
+| `pnpm lint`                  | Run ESLint                                   |
+| `pnpm format`                | Format code with Prettier                    |
 
 ---
 

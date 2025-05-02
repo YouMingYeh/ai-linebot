@@ -1,9 +1,8 @@
 // Load environment variables first
-import 'dotenv/config';
-
-import { middlewareConfig } from "./client/messaging-api.js";
-import { webhook, HTTPFetchError, middleware } from "@line/bot-sdk";
+import "dotenv/config";
+import { HTTPFetchError, middleware, webhook } from "@line/bot-sdk";
 import express, { Application, Request, Response } from "express";
+import { middlewareConfig } from "./client/messaging-api.js";
 import { prisma } from "./client/prisma.js";
 import { messageEventHandler } from "./event-handler/user-event-handler/message-event-handler/index.js"; // Direct import
 
@@ -79,11 +78,15 @@ app.post(
             console.error("Unknown error:", err);
           }
           // Return error status for this specific event
-          return { status: "error", eventId: (event as any).webhookEventId, error: (err instanceof Error) ? err.message : String(err) };
+          return {
+            status: "error",
+            eventId: (event as any).webhookEventId,
+            error: err instanceof Error ? err.message : String(err),
+          };
         }
         // Return success status for this specific event
         return { status: "success", eventId: (event as any).webhookEventId };
-      }),
+      })
     );
 
     // Check if *any* event processing failed
@@ -91,32 +94,33 @@ app.post(
 
     if (hasErrors) {
       // Log all errors for easier debugging
-      console.error("Errors occurred during event processing:", results.filter(r => r.status === 'error'));
+      console.error(
+        "Errors occurred during event processing:",
+        results.filter((r) => r.status === "error")
+      );
       // Return a 500 status, but include detailed results
       return res.status(500).json({ status: "partial_error", results });
     } else {
       // All events processed successfully
       return res.status(200).json({ status: "success", results });
     }
-  },
+  }
 );
 
 // Create a server and listen to it.
 app.listen(PORT, () => {
-  console.log(
-    `Application is live and listening on port ${PORT} at ${new Date()}.`,
-  );
+  console.log(`Application is live and listening on port ${PORT} at ${new Date()}.`);
 });
 
 // Handle application shutdown
-process.on('SIGINT', async () => {
-  console.log('Received SIGINT - Application shutting down');
+process.on("SIGINT", async () => {
+  console.log("Received SIGINT - Application shutting down");
   await prisma.$disconnect();
   process.exit(0);
 });
 
-process.on('SIGTERM', async () => {
-  console.log('Received SIGTERM - Application shutting down');
+process.on("SIGTERM", async () => {
+  console.log("Received SIGTERM - Application shutting down");
   await prisma.$disconnect();
   process.exit(0);
 });
