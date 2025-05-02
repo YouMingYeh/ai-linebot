@@ -4,6 +4,7 @@ import { Message, MessageInsert, User, UserInsert, UserUpdate } from "@/lib/type
 const MAX_MESSAGE_LENGTH = parseInt(process.env.MAX_MESSAGE_LENGTH || "30", 10);
 
 class Repository {
+  // Get user by ID from the database
   async getUserById(id: string): Promise<{ data: User | null; error: Error | null }> {
     try {
       const user = await prisma.user.findUnique({
@@ -17,6 +18,7 @@ class Repository {
     }
   }
 
+  // Create a new user in the database
   async createUser(user: UserInsert): Promise<{ data: User | null; error: Error | null }> {
     try {
       const createdUser = await prisma.user.create({
@@ -36,6 +38,7 @@ class Repository {
     }
   }
 
+  // Update an existing user by ID
   async updateUserById(
     id: string,
     user: UserUpdate
@@ -63,6 +66,7 @@ class Repository {
     }
   }
 
+  // Fetch messages for a user, respecting the MAX_MESSAGE_LENGTH setting
   async getMessagesByUserId(
     userId: string
   ): Promise<{ data: Message[] | null; error: Error | null }> {
@@ -73,7 +77,7 @@ class Repository {
         // Get all messages without limit
         messages = await prisma.message.findMany({
           where: { userId },
-          orderBy: { createdAt: "asc" }, // Already in ascending order by created_at
+          orderBy: { createdAt: "asc" },
         });
       } else {
         // Get limited number of most recent messages
@@ -94,6 +98,7 @@ class Repository {
     }
   }
 
+  // Create a new message in the database
   async createMessage(
     message: MessageInsert
   ): Promise<{ data: Message | null; error: Error | null }> {
@@ -103,7 +108,7 @@ class Repository {
           id: message.id,
           userId: message.userId,
           role: message.role,
-          content: message.content as any, // Prisma will handle JSON serialization
+          content: message.content as any, // Prisma handles JSON serialization
         },
       });
 
@@ -114,12 +119,9 @@ class Repository {
     }
   }
 
-  /**
-   * Upload a file to the our r2 server.
-   * @param filename We use the message ID as the filename as convention.
-   */
+  // Upload a file to storage (placeholder for S3/R2 implementation)
   async uploadFile(file: File, filename: string) {
-    // TODO: USE S3 PACKAGE AND UPLOAD TO R2
+    // TODO: Implement with S3 package to upload to R2
     return "";
   }
 }

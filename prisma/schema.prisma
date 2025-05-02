@@ -1,5 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// Prisma schema for the LINE Bot AI application database
 
 generator client {
   provider = "prisma-client-js"
@@ -10,6 +9,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// User profile with LINE user information
 model User {
   id          String    @id
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
@@ -23,6 +23,7 @@ model User {
   @@map("user")
 }
 
+// Chat messages in user conversations
 model Message {
   id        String   @id
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz

@@ -5,18 +5,21 @@ import { CoreMessage, generateText } from "ai";
 import { LINEAPIClient } from "@/lib/messaging-api/index.js";
 import { Repository } from "@/lib/repository/index.js";
 import { User } from "@/lib/types.js";
-import { generateUuid, removeMarkdown } from "@/lib/utils.js"; // Updated import
+import { generateUuid, removeMarkdown } from "@/lib/utils.js";
 
-// AI model configuration
+// AI model configuration from environment variables
 const DEFAULT_AI_PROVIDER = process.env.DEFAULT_AI_PROVIDER || "google";
 const GOOGLE_AI_MODEL = process.env.GOOGLE_AI_MODEL || "gemini-2.0-flash-001";
 const GOOGLE_GENERATIVE_AI_API_KEY = process.env.GOOGLE_GENERATIVE_AI_API_KEY || "";
 const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o";
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
 
-// User AI provider preference storage (in-memory)
+// In-memory storage for user AI provider preferences
 const userAIProviderPreference: Record<string, string> = {};
 
+/**
+ * Processes AI response and sends it to the user via LINE
+ */
 export async function processAiResponse(
   client: LINEAPIClient,
   repo: Repository,
@@ -34,12 +37,11 @@ export async function processAiResponse(
   };
   await client.replyMessages(replyToken, [msg]);
 
-  // Generate a unique ID for the AI response message
+  // Save AI response to the database
   const aiMessageId = `ai-${generateUuid()}`;
-
   await repo.createMessage({
-    id: aiMessageId, // Use generated ID for AI messages
-    userId: user.id, // Use id as the foreign key to user
+    id: aiMessageId,
+    userId: user.id,
     role: "assistant",
     content: [{ type: "text", text: aiResponse }],
   });
@@ -60,7 +62,7 @@ export function setUserAIProvider(userId: string, provider: string): boolean {
     return false;
   }
 
-  // Validate that the necessary API keys are available
+  // Verify API key availability
   if (provider === "google" && !GOOGLE_GENERATIVE_AI_API_KEY) {
     return false;
   }
@@ -72,12 +74,14 @@ export function setUserAIProvider(userId: string, provider: string): boolean {
   return true;
 }
 
+/**
+ * Generates AI reply based on user conversation history
+ */
 export async function generateAiReply(user: User, msgs: CoreMessage[]): Promise<string> {
   try {
     const provider = getUserAIProvider(user.id);
 
     if (provider === "openai") {
-      // OpenAI model
       if (!OPENAI_API_KEY) {
         return "OpenAI API key not configured. Please contact the administrator.";
       }

@@ -19,16 +19,17 @@ export const messageEventHandler = async (event: webhook.MessageEvent): Promise<
     return;
   }
 
+  // Show loading indicator while processing
   await lineApiClient.showLoadingAnimation(event.source.userId);
 
   try {
+    // Get user profile from LINE API
     const profile = await lineApiClient.getUserProfile(event.source.userId);
 
-    // Get or create user using Prisma's upsert operation
+    // Upsert user - create if not exists, update if exists
     const user = await prisma.user.upsert({
       where: { id: profile.userId },
       update: {
-        // Only update display name and picture URL if they've changed
         displayName: profile.displayName,
         pictureUrl: profile.pictureUrl,
       },
@@ -40,7 +41,7 @@ export const messageEventHandler = async (event: webhook.MessageEvent): Promise<
       },
     });
 
-    // Now we can use the user directly without having to do an additional query
+    // Route to appropriate handler based on message type
     switch (event.message.type) {
       case "text":
         return textEventHandler(event, user, lineApiClient, repository);

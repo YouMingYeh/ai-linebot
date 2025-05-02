@@ -1,9 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 
 /**
- * Removes common markdown syntax from text and adds emojis for layout
- * @param {string} markdownText - The markdown text to process
- * @return {string} Plain text with markdown syntax removed and emojis added
+ * Formats markdown text for LINE messages by removing syntax and adding emoji indicators
  */
 export function removeMarkdown(markdownText: string) {
   if (!markdownText) return "";
@@ -16,25 +14,25 @@ export function removeMarkdown(markdownText: string) {
   // Remove inline code, keeping the content inside
   text = text.replace(/`([^`]+)`/g, "$1");
 
-  // Remove headers and prepend with 📌 emoji
+  // Replace headers with emoji prefix
   text = text.replace(/^(#{1,6})\s+(.+)$/gm, "📌 $2");
 
-  // Remove emphasis, only when used as markdown syntax
-  text = text.replace(/\*\*(.*?)\*\*/g, "$1"); // Bold
+  // Remove emphasis
+  text = text.replace(/\*\*(.*?)\*\*/g, "$1"); 
 
-  // Remove blockquotes and prepend with 💬 emoji
+  // Replace blockquotes with emoji prefix
   text = text.replace(/^\s*>\s+(.+)$/gm, "💬 $1");
 
-  // Convert bullet lists to plain text with 🔹 emoji
+  // Replace bullet lists with emoji prefix
   text = text.replace(/^\s*[-*+]\s+(.+)$/gm, "🔹 $1");
 
-  // Convert numbered lists to plain text with ℹ️ emoji
+  // Replace numbered lists with emoji prefix
   text = text.replace(/^\s*\d+\.\s+(.+)$/gm, "ℹ️ $1");
 
-  // Remove link syntax, keep text and URL with 🔗 emoji)
+  // Replace links with text and URL format
   text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1 🔗 ($2)");
 
-  // Remove image syntax, keep alt text with 🖼️ emoji
+  // Replace images with alt text and emoji
   text = text.replace(/!\[([^\]]+)\]\([^)]+\)/g, "🖼️ $1");
 
   // Clean up extra whitespace
@@ -45,17 +43,14 @@ export function removeMarkdown(markdownText: string) {
 }
 
 /**
- * Generate a UUID for use as an identifier
- * @returns A new UUID string
+ * Generates a unique ID for database entries
  */
 export const generateUuid = (): string => {
   return uuidv4();
 };
 
 /**
- * Converts Blob or Buffer content to a base64 string.
- * @param content The content to convert (Blob or Buffer).
- * @returns A promise resolving to the base64 encoded string.
+ * Converts Blob or Buffer to base64 string for storage
  */
 export async function convertContentToBase64(content: Blob | Buffer): Promise<string> {
   if (Buffer.isBuffer(content)) {
